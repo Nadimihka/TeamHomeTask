@@ -50,10 +50,7 @@ public class Main {
                     continue;
                 }
                 amount = Integer.parseInt(parts[1]);
-                if (amount <= 0) {
-                    System.out.println("Количество выбранного продукта не может быть меньше 1");
-                    continue;
-                }
+
             } catch (NumberFormatException e) {
                 System.out.println("Ошибка ввода! Нужно вводить только числа, а не текст!");
                 continue;
@@ -64,9 +61,20 @@ public class Main {
                 continue;
             }
 
-            numb[numProduct] += amount;//сумма штук введенного
+            if (amount == 0) {
+                numb[numProduct] = 0;
+            } else if ((amount < 0) && (numb[numProduct] + amount < 0)) {
+                System.out.println("Некорректный ввод, " +
+                        "количество товара " + products[numProduct] +
+                        " стало отрицательным. Товар будет исключен из корзины");
+                numb[numProduct] = 0;
+            } else {
+                numb[numProduct] += amount;
+            }
+        }
 
-            int sum = amount * prises[numProduct];
+        for (int i = 0; i < numb.length; i++) {
+            int sum = numb[i] * prises[i];
             ollSum += sum;// подсчет общей суммы списка
         }
 
