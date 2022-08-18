@@ -73,10 +73,7 @@ public class Main {
                     continue;
                 }
                 amount = Integer.parseInt(parts[1]);
-                if (amount <= 0) {
-                    System.out.println("Количество выбранного продукта не может быть меньше 1");
-                    continue;
-                }
+
             } catch (NumberFormatException e) {
                 System.out.println("Ошибка ввода! Нужно вводить только числа, а не текст!");
                 continue;
@@ -88,42 +85,61 @@ public class Main {
             }
 
             if (numProduct < products.length) {
-                numb[numProduct] += amount;//сумма штук введенного
-                int sum = amount * prises[numProduct];
-                ollSum += sum;// подсчет общей суммы списка
+                if (amount == 0) {
+                    numb[numProduct] = 0;
+                }
+                if ((amount < 0) && (numb[numProduct] + amount < 0)) {
+                    System.out.println("Некорректный ввод, " +
+                            "количество товара " + products[numProduct] +
+                            " отрицательно и будет обнулено");
+                    numb[numProduct] = 0;
+                } else {
+                    numb[numProduct] += amount;
+                }
             } else {
                 saleNumProduct = numProduct - products.length;
-                saleAmount = amount;
-                saleNumb[saleNumProduct] += saleAmount;//сумма штук введенного
+                if (amount == 0) {
+                    saleNumb[saleNumProduct] = 0;
+                }
+                if ((amount < 0) && (saleNumb[saleNumProduct] + amount) < 0) {
+                    System.out.println("Некорректный ввод, " +
+                            "количество товара " + saleProducts[saleNumProduct] +
+                            " отрицательно и будет обнулено");
+                    saleNumb[saleNumProduct] = 0;
+                } else {
+                    saleNumb[saleNumProduct] += amount;
+                }
             }
         }
 
-        System.out.println("Ваша корзина: ");
+            System.out.println("Ваша корзина: ");
 
-        for (int i = 0; i < numb.length; i++) {
-            if (numb[i] != 0) {
-                System.out.println(products[i] + " " + numb[i] + " шт " +
-                        prises[i] + " руб/шт " + (numb[i] * prises[i]) + " в сумме");
+            for (int i = 0; i < numb.length; i++) {
+                if (numb[i] != 0) {
+                    int sum = numb[i] * prises[i];
+                    System.out.println(products[i] + " " + numb[i] + " шт " +
+                            prises[i] + " руб/шт " + sum + " в сумме");
+                    ollSum += sum;
+                }
             }
-        }
 
-        System.out.println("Итого: " + ollSum);
+            System.out.println("Итого: " + ollSum);
 
-        System.out.println("Ваша корзина c товарами по акции: ");
+            System.out.println("Ваша корзина c товарами по акции: ");
 
-        for (int i = 0; i < saleNumb.length; i++) {
-            if (saleNumb[i] != 0) {
-                sumPoz = (3 * (int) (saleNumb[i] / 3) * salePrices[i]) / 1.5 +
-                        (saleNumb[i] - 3 * (int) (saleNumb[i] / 3)) * salePrices[i];
+            for (int i = 0; i < saleNumb.length; i++) {
+                if (saleNumb[i] != 0) {
+                    sumPoz = (3 * (int) (saleNumb[i] / 3) * salePrices[i]) / 1.5 +
+                            (saleNumb[i] - 3 * (int) (saleNumb[i] / 3)) * salePrices[i];
 
-                System.out.println(saleProducts[i] + " " + saleNumb[i] + " шт " +
-                        salePrices[i] + " руб/шт " + sumPoz + " в сумме");
+                    System.out.println(saleProducts[i] + " " + saleNumb[i] + " шт " +
+                            salePrices[i] + " руб/шт " + sumPoz + " в сумме");
 
-                saleOllSum += sumPoz;
+                    saleOllSum += sumPoz;
+                }
             }
-        }
 
-        System.out.println("Итого по акции: " + saleOllSum);
-        System.out.println(System.lineSeparator() + "Итого за все: " + (ollSum + saleOllSum));
+            System.out.println("Итого по акции: " + saleOllSum);
+            System.out.println(System.lineSeparator() + "Итого за все: " + (ollSum + saleOllSum));
+        }
     }
-}
